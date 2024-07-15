@@ -1,5 +1,6 @@
 import psutil
 import platform
+import socket, uuid
 
 from datetime import datetime
 def get_size(bytes, suffix="B"):
@@ -24,6 +25,9 @@ print(f"Version: {uname.version}")
 print(f"Machine: {uname.machine}")
 print(f"Processor: {uname.processor}")
 
+print("Python: ", platform.python_version())
+print("Hostname", socket.gethostname())
+print("Host IP", socket.gethostbyname(socket.gethostname()))
 # Boot Time
 print("="*40, "Boot Time", "="*40)
 boot_time_timestamp = psutil.boot_time()

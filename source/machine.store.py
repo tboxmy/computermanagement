@@ -4,12 +4,16 @@ import psutil
 import platform
 # importing the requests library
 import requests
- 
+import socket
+import sys
+
 # api-endpoint
-URL = "http://cloud-subscriptions.test:90/api/machines/store"
-APIKEY = "Durian season 2024"
+# URL = "http://cloud-subscriptions.test:90/api/machines/store"
+URL = "http://snipeitcmgi.test:90/api/machines/store"
+APIKEY = "Nicholas season 2024"
  
 from datetime import datetime
+
 def get_size(bytes, suffix="B"):
     """
     Scale bytes to its proper format
@@ -32,8 +36,11 @@ sys_release = {uname.release}
 sys_version = {uname.version}
 sys_processor = {uname.machine}
 sys_processor = {uname.processor}
-
-
+ip_address = socket.gethostbyname(socket.gethostname())
+print('IP:',ip_address)
+if uname.system == 'Windows':
+    if sys.getwindowsversion().build >= 22000:
+        sys_release = 11
 # Boot Time
 print("="*40, "Boot Time", "="*40)
 boot_time_timestamp = psutil.boot_time()
@@ -145,14 +152,16 @@ print(f"Total Bytes Sent: {get_size(net_io.bytes_sent)}")
 print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
 
 # defining a params dict for the parameters to be sent to the API
-HEADERS = {'x-api-key':APIKEY, 'Accept':'application/json'}
-PARAMS = {'resource_id': 2, 
+HEADERS = {'x-api-key':APIKEY, 'Accept':'application/json',
+           'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNTIwZTdiMGRkY2VmYzhjYWFiODY3ZjM1YzVlMWUxZGFmZjY0ZTdkNjZjZGMxZTcxZGNmYjkwNjYzMTZjZmRjNDJhMWY4MzJmNTYxZWQ2ZGUiLCJpYXQiOjE3MjEwMTU3ODMuOTA4MjU1LCJuYmYiOjE3MjEwMTU3ODMuOTA4MjYsImV4cCI6MjE5NDMxNDk4My43NDE3Niwic3ViIjoiMSIsInNjb3BlcyI6W119.n8whYZV8G8YJ9r0-X58H-zmHeKXW1TcWQOdoYjce4s577mQcZuqPV19P5kpPsuS3axKjsoCv4wBIFc2HnUoDtyMZdzTC-_Kdx0YiUm2EbGze9h2Jg29Lklo21X8UpG7tMakZ2o32rnp48PaTJ9d2d7n6fQ8K59aoEF1smU9jk-PV9078HAMvp6_Y080kcIjx9qDUG_tn48GtEM9V-GCREkWEAaPnrtr7YIuGvzxeBUm5Z6NEcQXdpYysq3s_wgAIxIS2FHdXz7uEEnaMR9yL8RKrEMPCoICeFWuacn_19veZ-1y1AROHOcfkIPE8XKk45KWsCzF-MN599jBPH3m_aN9ifvlXeueqgc4vVDF_d_CD4kGfGRebzFvWTIRGhrNEun7XhNxkQMvoJsMdniMOFgMTnnAvgk1a21grrAs8-2jGlHquPABSiS92AStnVgX0j8Rpqk09jKvmEnTYXqdrSeLiwpwY-OhGRbNnUrG_GOG8phE3luU6YIWwRN_wD7tbsZRRYDw6v97tjtpx1A0AY9xWnezgUZFkhFhl9_2eilyIoHAFUqToehpllyKRfsi6mJVXTRNqNqYqFTwdBZJU8YVEH35HMRKnS_ORvGZ2WJyIbmnFJaE18_LFgC6cGPPqa7XYnzLvDY6SKzWWNiWWKzP_XezshrH6I4jrXrD_mEg'}
+PARAMS = {'resource_id': 1, 
           'system': sys_system,
           'name':sys_name,
           'release':sys_release,
           'version':sys_version,
           'processor': sys_processor,
           'last_boot': last_boot,
+          'ip_address': ip_address,
           'cpu1': cpu1,         
           'cpu2': cpu2,
           'cpu3': cpu3,

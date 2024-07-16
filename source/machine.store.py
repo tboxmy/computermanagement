@@ -37,10 +37,10 @@ def getMachine_addr():
 		dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
 	elif "linux" in os_type:
 		command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
-		dummy = os.popen(command).read()
+		dummy = os.popen(command).read().replace("\n",",").replace("	","")
 	elif "darwin" in os_type:
 		command = "ioreg -l | grep IOPlatformSerialNumber"
-		dummy = os.popen(command).read()	
+		dummy = os.popen(command).read().replace("\n",",").replace("	","")
 	return dummy
 
 

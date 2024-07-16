@@ -11,6 +11,7 @@ Install packages
 pip install requests
 pip install psutil
 pip install getmac
+pip install wmi
 
 Generate installer
 pip install -U pyinstaller 

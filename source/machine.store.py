@@ -6,7 +6,8 @@ import platform
 # importing the requests library
 import requests
 import socket
-import sys
+import wmi
+import os, sys
 
 # api-endpoint
 URL = "https://cmgimis.apps.cmg.com.my/api/machines/store"
@@ -28,6 +29,24 @@ def get_size(bytes, suffix="B"):
         if bytes < factor:
             return f"{bytes:.2f}{unit}{suffix}"
         bytes /= factor
+
+def getMachine_addr():
+	os_type = sys.platform.lower()
+	dummy = None
+	if "win" in os_type:
+		# command = "wmic bios get serialnumber, manufacturer, version"
+		# dummy = os.popen(command).read()
+		windata = wmi.WMI()
+		sysbios = windata.Win32_BIOS()[0]
+		dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
+	elif "linux" in os_type:
+		command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
+		dummy = os.popen(command).read()
+	elif "darwin" in os_type:
+		command = "ioreg -l | grep IOPlatformSerialNumber"
+		dummy = os.popen(command).read()	
+	return dummy
+# return os.popen(command).read().replace("\n",",").replace("	","")
 
 print("="*40, "System Information", "="*40)
 uname = platform.uname()
@@ -156,6 +175,18 @@ net_io = psutil.net_io_counters()
 print(f"Total Bytes Sent: {get_size(net_io.bytes_sent)}")
 print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
 
+# get windows installed software
+# windata = wmi.WMI()
+# software = windata.Win32_Product()
+# sysbios = windata.Win32_BIOS()[0]
+# print(f'BIOS :{sysbios.Manufacturer}, {sysbios.Version}, - {sysbios.Serialnumber}')
+# for product in software:
+#     print(f"Software: {product.Name} {product.ProcessId}")
+
+print("Win ", getMachine_addr())
+# for product in systemwin:
+#     print(f"Computer: {product.version}")
+
 # defining a params dict for the parameters to be sent to the API
 HEADERS = {'x-api-key':APIKEY, 'Accept':'application/json',
            'Authorization':'Bearer '+TOKEN}
@@ -184,7 +215,8 @@ PARAMS = {'resource_id': RESOURCEID,
           'memory3': memory3,
           'memory4': memory4,
           'network1': network1,
-          'storage1': storage1
+          'storage1': storage1,
+          'bios': getMachine_addr(),
           }
  
 # sending get request and saving the response as response object

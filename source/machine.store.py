@@ -53,11 +53,15 @@ last_boot = str(bt.year) + '/' + str(bt.month) + '/' + str(bt.day) +' ' + str(bt
 cpufreq = psutil.cpu_freq()
 cpu1 = psutil.cpu_count(logical=False)
 cpu2 = psutil.cpu_count(logical=True)
-cpu3 = Decimal(cpufreq.max)
-cpu4 = Decimal(cpufreq.min)
-cpu5 = cpufreq.current
+cpu3 = None
+cpu4 = None
+cpu5 = None
 cpu6 = None
 cpu7 = Decimal(psutil.cpu_percent())
+if cpufreq != None:
+    cpu3 = Decimal(cpufreq.max)
+    cpu4 = Decimal(cpufreq.min)
+    cpu5 = cpufreq.current
 # Memory usage
 svmem = psutil.virtual_memory()
 memory1 = get_size(svmem.total)
@@ -70,11 +74,6 @@ print("="*40, "CPU Info", "="*40)
 # number of cores
 print("Physical cores:", psutil.cpu_count(logical=False))
 print("Total cores:", psutil.cpu_count(logical=True))
-# CPU frequencies
-
-print(f"Max Frequency: {cpufreq.max:.2f}Mhz")
-print(f"Min Frequency: {cpufreq.min:.2f}Mhz")
-print(f"Current Frequency: {cpufreq.current:.2f}Mhz")
 # CPU usage
 print("CPU Usage Per Core:")
 for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
@@ -123,9 +122,11 @@ for partition in partitions:
     storages.append(mydata)
 storage1 = json.dumps(storages)
 # get IO statistics since boot
-disk_io = psutil.disk_io_counters()
-print(f"Total read: {get_size(disk_io.read_bytes)}")
-print(f"Total write: {get_size(disk_io.write_bytes)}")
+disk_io = None
+if cpufreq != None:
+    disk_io = psutil.disk_io_counters()
+    print(f"Total read: {get_size(disk_io.read_bytes)}")
+    print(f"Total write: {get_size(disk_io.write_bytes)}")
 
 # Network information
 print("="*40, "Network Information", "="*40)

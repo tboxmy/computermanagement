@@ -23,7 +23,7 @@ pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py
 
 ## Execute
 
-MISAgent-windows11 <asset tag>
+MISAgent-windows11 &lt;asset tag>
 
 ## References
 

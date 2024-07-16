@@ -1,0 +1,13 @@
+# api-endpoint
+URL = "https://localhost/api"
+APIKEY = "Nicholas season 2024"
+TOKEN = "<OKEN STRING"
+
+def get_url():
+    return URL
+
+def get_apikey():
+    return APIKEY
+
+def get_token():
+    return TOKEN

@@ -43,14 +43,14 @@ def getMachine_addr():
 
 
 RESOURCEID = 1
-APP_RELEASE = 'cmgimis version 0.9'
+APP_RELEASE = 'version 0.9'
 if sys.argv[1] != None:
     RESOURCEID = sys.argv[1]
     if sys.argv[1] == '-h':
         print ('Usage: command <tag_id>')
         exit(0)
     if sys.argv[1] == '-v':
-        print (APP_RELEASE)
+        print (sys.argv[0], ' ', APP_RELEASE)
         exit(0)
 
 print("="*40, "System Information", "="*40)

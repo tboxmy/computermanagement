@@ -16,6 +16,9 @@ Generate installer
 pip install -U pyinstaller 
 pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py
 
+Execute
+MISAgent-windows11 <asset tag>
+
 Ref 
 https://thepythoncode.com/article/get-hardware-system-information-python
 https://github.com/snipe/snipe-it/tree/master

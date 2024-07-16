@@ -1,7 +1,11 @@
 Installation
 
+On Centos Linux
+sudo dnf install python3-pip
+
 Upgrade
-python.exe -m pip install --upgrade pip
+python3.exe -m pip install --upgrade pip
+
 
 Install packages
 pip install requests
@@ -9,7 +13,7 @@ pip install psutil
 
 Generate installer
 pip install -U pyinstaller 
-pyinstaller --onefile --name "MISAgent" source/machine.store.py
+pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py
 
 Ref 
 https://thepythoncode.com/article/get-hardware-system-information-python

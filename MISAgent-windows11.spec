@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['source\\machine.store.py'],
+    ['source\\machine.store.py', 'source\\config.py'],
     pathex=[],
     binaries=[],
     datas=[],

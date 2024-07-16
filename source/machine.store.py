@@ -6,10 +6,12 @@ import platform
 # importing the requests library
 import requests
 import socket
-import wmi
 import os, sys
 from datetime import datetime
 from config import get_url, get_apikey, get_token
+
+if platform.system() == "Windows":
+    import wmi
 
 def get_size(bytes, suffix="B"):
     """
@@ -48,10 +50,10 @@ if sys.argv[1] != None:
     RESOURCEID = sys.argv[1]
     if sys.argv[1] == '-h':
         print ('Usage: command <tag_id>')
-        exit(0)
+        sys.exit(0)
     if sys.argv[1] == '-v':
         print (sys.argv[0], ' ', APP_RELEASE)
-        exit(0)
+        sys.exit(0)
 
 print("="*40, "System Information", "="*40)
 uname = platform.uname()

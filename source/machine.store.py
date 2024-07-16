@@ -10,6 +10,7 @@ import wmi
 import os, sys
 from datetime import datetime
 from config import get_url, get_apikey, get_token
+
 def get_size(bytes, suffix="B"):
     """
     Scale bytes to its proper format
@@ -28,7 +29,7 @@ def getMachine_addr():
 	dummy = None
 	if "win" in os_type:
 		# command = "wmic bios get serialnumber, manufacturer, version"
-		# dummy = os.popen(command).read()
+		# dummy = os.popen(command).read().replace("\n",",").replace("	","")
 		windata = wmi.WMI()
 		sysbios = windata.Win32_BIOS()[0]
 		dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
@@ -39,7 +40,18 @@ def getMachine_addr():
 		command = "ioreg -l | grep IOPlatformSerialNumber"
 		dummy = os.popen(command).read()	
 	return dummy
-# return os.popen(command).read().replace("\n",",").replace("	","")
+
+
+RESOURCEID = 1
+APP_RELEASE = 'cmgimis version 0.9'
+if sys.argv[1] != None:
+    RESOURCEID = sys.argv[1]
+    if sys.argv[1] == '-h':
+        print ('Usage: command <tag_id>')
+        exit(0)
+    if sys.argv[1] == '-v':
+        print (APP_RELEASE)
+        exit(0)
 
 print("="*40, "System Information", "="*40)
 uname = platform.uname()
@@ -183,9 +195,7 @@ print("Win ", getMachine_addr())
 # defining a params dict for the parameters to be sent to the API
 HEADERS = {'x-api-key':get_apikey(), 'Accept':'application/json',
            'Authorization':'Bearer '+ get_token()}
-RESOURCEID = 1
-if sys.argv[0] != None:
-    RESOURCEID = sys.argv[1]
+
 print('resource ', RESOURCEID)
 PARAMS = {'resource_id': RESOURCEID, 
           'system': sys_system,

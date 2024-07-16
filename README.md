@@ -1,11 +1,12 @@
-Installation
+# Post Machine data
+
+## Installation
 
 On Centos Linux
 sudo dnf install python3-pip
 
 Upgrade
 python3.exe -m pip install --upgrade pip
-
 
 Install packages
 pip install requests
@@ -15,13 +16,23 @@ pip install wmi
 
 Rename config.py-example to config.py and update the variable values.
 
-Generate installer
-pip install -U pyinstaller 
+## Generate installer
+
+pip install -U pyinstaller
 pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py
 
-Execute
+## Execute
+
 MISAgent-windows11 <asset tag>
 
-Ref 
+## References
+
 https://thepythoncode.com/article/get-hardware-system-information-python
-https://github.com/snipe/snipe-it/tree/master
+
+## Related projects
+
+- [Snipe-IT](https://github.com/snipe/snipe-it)
+
+## Credits
+
+- [Tboxmy](https://github.com/tboxmy)

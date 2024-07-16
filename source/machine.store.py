@@ -1,4 +1,5 @@
 from decimal import *
+from getmac import get_mac_address as gma
 import json
 import psutil
 import platform
@@ -38,7 +39,9 @@ sys_version = {uname.version}
 sys_processor = {uname.machine}
 sys_processor = {uname.processor}
 ip_address = socket.gethostbyname(socket.gethostname())
+mac_address = gma()
 print('IP:',ip_address)
+print('MAC:',mac_address)
 if uname.system == 'Windows':
     if sys.getwindowsversion().build >= 22000:
         sys_release = 11
@@ -168,6 +171,7 @@ PARAMS = {'resource_id': RESOURCEID,
           'processor': sys_processor,
           'last_boot': last_boot,
           'ip_address': ip_address,
+          'mac': mac_address,
           'cpu1': cpu1,         
           'cpu2': cpu2,
           'cpu3': cpu3,

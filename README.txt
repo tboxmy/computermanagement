@@ -10,6 +10,7 @@ python3.exe -m pip install --upgrade pip
 Install packages
 pip install requests
 pip install psutil
+pip install getmac
 
 Generate installer
 pip install -U pyinstaller 

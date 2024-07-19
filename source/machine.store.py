@@ -36,10 +36,12 @@ def getMachine_addr():
         sysbios = windata.Win32_BIOS()[0]
         dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
     elif "linux" in os_type:
-        command = command = "cat /sys/class/dmi/id/bios_version"
-        
+        command = """awk '{printf "%s"",",$0}' /sys/class/dmi/id/bios_version /sys/class/dmi/id/bios_vendor /sys/class/dmi/id/bios_date"""
         # command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
-        dummy = os.popen(command).read().replace("\n",",").replace("	","")
+        try:
+            dummy = os.popen(command).read()
+        except:
+            dummy = "NA"
     elif "darwin" in os_type:
         command = "ioreg -l | grep IOPlatformSerialNumber"
         dummy = os.popen(command).read().replace("\n",",").replace("	","")
@@ -47,7 +49,7 @@ def getMachine_addr():
 
 RESOURCEID = 1
 DISPLAY = 1
-APP_RELEASE = 'version 0.9.1'
+APP_RELEASE = 'version 0.9.2'
 if sys.argv[1] != None:
     RESOURCEID = sys.argv[1]
     if sys.argv[1] == '-h':

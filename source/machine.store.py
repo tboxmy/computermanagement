@@ -245,10 +245,14 @@ PARAMS = {'resource_id': RESOURCEID,
           }
  
 # sending get request and saving the response as response object
-response = requests.post(url = get_url(), headers=HEADERS, data=PARAMS)
-# extracting data in json format
-data = response.json()
-print(data);
+try:
+    response = requests.post(url = get_url(), headers=HEADERS, data=PARAMS)
+    # extracting data in json format
+    data = response.json()
+    print(data)
+except:
+    print('Server connection failed URL=', get_url()) 
+    sys.exit(2)
 # try:
 #     response = requests.post(url = get_url(), headers=HEADERS, data=PARAMS)
 #     data = response.json()

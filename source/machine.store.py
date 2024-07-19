@@ -27,21 +27,23 @@ def get_size(bytes, suffix="B"):
         bytes /= factor
 
 def getMachine_addr():
-	os_type = sys.platform.lower()
-	dummy = None
-	if "win" in os_type:
-		# command = "wmic bios get serialnumber, manufacturer, version"
-		# dummy = os.popen(command).read().replace("\n",",").replace("	","")
-		windata = wmi.WMI()
-		sysbios = windata.Win32_BIOS()[0]
-		dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
-	elif "linux" in os_type:
-		command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
-		dummy = os.popen(command).read().replace("\n",",").replace("	","")
-	elif "darwin" in os_type:
-		command = "ioreg -l | grep IOPlatformSerialNumber"
-		dummy = os.popen(command).read().replace("\n",",").replace("	","")
-	return dummy
+    os_type = sys.platform.lower()
+    dummy = None
+    if "win" in os_type:
+        # command = "wmic bios get serialnumber, manufacturer, version"
+        # dummy = os.popen(command).read().replace("\n",",").replace("	","")
+        windata = wmi.WMI()
+        sysbios = windata.Win32_BIOS()[0]
+        dummy = "".join([sysbios.Manufacturer, ',',sysbios.Version, ',', sysbios.Serialnumber])
+    elif "linux" in os_type:
+        command = command = "cat /sys/class/dmi/id/bios_version"
+        
+        # command = "hal-get-property --udi /org/freedesktop/Hal/devices/computer --key system.hardware.uuid"
+        dummy = os.popen(command).read().replace("\n",",").replace("	","")
+    elif "darwin" in os_type:
+        command = "ioreg -l | grep IOPlatformSerialNumber"
+        dummy = os.popen(command).read().replace("\n",",").replace("	","")
+    return dummy
 
 RESOURCEID = 1
 DISPLAY = 1

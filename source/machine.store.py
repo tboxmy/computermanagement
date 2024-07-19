@@ -43,21 +43,24 @@ def getMachine_addr():
 		dummy = os.popen(command).read().replace("\n",",").replace("	","")
 	return dummy
 
-
 RESOURCEID = 1
-APP_RELEASE = 'version 0.9'
+DISPLAY = 1
+APP_RELEASE = 'version 0.9.1'
 if sys.argv[1] != None:
     RESOURCEID = sys.argv[1]
     if sys.argv[1] == '-h':
         print ('Usage: command <tag_id>')
+        print ('or to silence details')
+        print ('command -s <tag_id>')
         sys.exit(0)
     if sys.argv[1] == '-v':
         print (sys.argv[0], ' ', APP_RELEASE)
         sys.exit(0)
+    if sys.argv[1] == '-s':
+        DISPLAY = 0
+        RESOURCEID = sys.argv[2]
 
-print("="*40, "System Information", "="*40)
 uname = platform.uname()
-print(f"System: {uname.system}")
 sys_system = {uname.system}
 sys_name = {uname.node}
 sys_release = {uname.release}
@@ -66,18 +69,23 @@ sys_processor = {uname.machine}
 sys_processor = {uname.processor}
 ip_address = socket.gethostbyname(socket.gethostname())
 mac_address = gma()
-print('IP:',ip_address)
-print('MAC:',mac_address)
+if DISPLAY == 1:
+    print("="*40, "System Information", "="*40)
+    print(f"System: {uname.system}")
+    print('IP:',ip_address)
+    print('MAC:',mac_address)
 if uname.system == 'Windows':
     if sys.getwindowsversion().build >= 22000:
         sys_release = 11
 # Boot Time
-print("="*40, "Boot Time", "="*40)
 boot_time_timestamp = psutil.boot_time()
 bt = datetime.fromtimestamp(boot_time_timestamp)
-print(f"Boot Time: {bt.year}/{bt.month}/{bt.day} {bt.hour}:{bt.minute}:{bt.second}")
-
 last_boot = str(bt.year) + '/' + str(bt.month) + '/' + str(bt.day) +' ' + str(bt.hour) + ':' + str(bt.minute) + ':' + str(bt.second)
+if DISPLAY == 1:
+    print("="*40, "Boot Time", "="*40)
+    print(f"Boot Time: {bt.year}/{bt.month}/{bt.day} {bt.hour}:{bt.minute}:{bt.second}")
+    print("Last boot:", last_boot)
+
 # CPU info
 cpufreq = psutil.cpu_freq()
 cpu1 = psutil.cpu_count(logical=False)
@@ -98,53 +106,54 @@ memory2 = get_size(svmem.available)
 memory3 = get_size(svmem.used)
 memory4 = Decimal(svmem.percent)
 
-# let's print CPU information
-print("="*40, "CPU Info", "="*40)
-# number of cores
-print("Physical cores:", psutil.cpu_count(logical=False))
-print("Total cores:", psutil.cpu_count(logical=True))
-# CPU usage
-print("CPU Usage Per Core:")
-for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
-    print(f"Core {i}: {percentage}%")
-print(f"Total CPU Usage: {psutil.cpu_percent()}%")
+if DISPLAY == 1:
+    print("="*40, "CPU Info", "="*40)
+    # number of cores
+    print("Physical cores:", psutil.cpu_count(logical=False))
+    print("Total cores:", psutil.cpu_count(logical=True))
+    # CPU usage
+    print("CPU Usage Per Core:")
+    for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
+        print(f"Core {i}: {percentage}%")
+    print(f"Total CPU Usage: {psutil.cpu_percent()}%")
 
 # Memory Information
-print("="*40, "Memory Information", "="*40)
-# get the memory details
-
-print(f"Total: {get_size(svmem.total)}")
-print(f"Available: {get_size(svmem.available)}")
-print(f"Used: {get_size(svmem.used)}")
-print(f"Percentage: {svmem.percent}%")
-print("="*20, "SWAP", "="*20)
-# get the swap memory details (if exists)
-swap = psutil.swap_memory()
-print(f"Total: {get_size(swap.total)}")
-print(f"Free: {get_size(swap.free)}")
-print(f"Used: {get_size(swap.used)}")
-print(f"Percentage: {swap.percent}%")
+if DISPLAY == 1:
+    print("="*40, "Memory Information", "="*40)
+    print(f"Total: {get_size(svmem.total)}")
+    print(f"Available: {get_size(svmem.available)}")
+    print(f"Used: {get_size(svmem.used)}")
+    print(f"Percentage: {svmem.percent}%")
+    print("="*20, "SWAP", "="*20)
+    # get the swap memory details (if exists)
+    swap = psutil.swap_memory()
+    print(f"Total: {get_size(swap.total)}")
+    print(f"Free: {get_size(swap.free)}")
+    print(f"Used: {get_size(swap.used)}")
+    print(f"Percentage: {swap.percent}%")
 
 # Disk Information
-print("="*40, "Disk Information", "="*40)
-print("Partitions and Usage:")
+if DISPLAY == 1:
+    print("="*40, "Disk Information", "="*40)
+    print("Partitions and Usage:")
 # get all disk partitions
 partitions = psutil.disk_partitions()
 storages = []
-for partition in partitions:
-    print(f"=== Device: {partition.device} ===")
-    print(f"  Mountpoint: {partition.mountpoint}")
-    print(f"  File system type: {partition.fstype}")
+for partition in partitions:    
     try:
         partition_usage = psutil.disk_usage(partition.mountpoint)
     except PermissionError:
         # this can be catched due to the disk that
         # isn't ready
         continue
-    print(f"  Total Size: {get_size(partition_usage.total)}")
-    print(f"  Used: {get_size(partition_usage.used)}")
-    print(f"  Free: {get_size(partition_usage.free)}")
-    print(f"  Percentage: {partition_usage.percent}%")
+    if DISPLAY == 1:
+        print(f"=== Device: {partition.device} ===")
+        print(f"  Mountpoint: {partition.mountpoint}")
+        print(f"  File system type: {partition.fstype}")
+        print(f"  Total Size: {get_size(partition_usage.total)}")
+        print(f"  Used: {get_size(partition_usage.used)}")
+        print(f"  Free: {get_size(partition_usage.free)}")
+        print(f"  Percentage: {partition_usage.percent}%")
     mydata = {'device': partition.device, 'mount': partition.mountpoint, 
               'filesystem': partition.fstype, 'total': get_size(partition_usage.total),
               'used': get_size(partition_usage.used), 'free': partition_usage.free, 'percentage': partition_usage.percent}
@@ -154,33 +163,40 @@ storage1 = json.dumps(storages)
 disk_io = None
 if cpufreq != None:
     disk_io = psutil.disk_io_counters()
-    print(f"Total read: {get_size(disk_io.read_bytes)}")
-    print(f"Total write: {get_size(disk_io.write_bytes)}")
+    if DISPLAY == 1:
+        print(f"Total read: {get_size(disk_io.read_bytes)}")
+        print(f"Total write: {get_size(disk_io.write_bytes)}")
 
 # Network information
-print("="*40, "Network Information", "="*40)
+if DISPLAY == 1:
+    print("="*40, "Network Information", "="*40)
 # get all network interfaces (virtual and physical)
 if_addrs = psutil.net_if_addrs()
 networking = []
 for interface_name, interface_addresses in if_addrs.items():
     for address in interface_addresses:
-        print(f"=== Interface: {interface_name} ===")
+        if DISPLAY == 1:
+            print(f"=== Interface: {interface_name} ===")
         if str(address.family) == 'AddressFamily.AF_INET':
-            print(f"  IP Address: {address.address}")
-            print(f"  Netmask: {address.netmask}")
-            print(f"  Broadcast IP: {address.broadcast}")
+            if DISPLAY == 1:
+                print(f"  IP Address: {address.address}")
+                print(f"  Netmask: {address.netmask}")
+                print(f"  Broadcast IP: {address.broadcast}")
             mydata = { 'IP': address.address, 'netmask': address.netmask, 'broadcast': address.broadcast}
         elif str(address.family) == 'AddressFamily.AF_PACKET':
-            print(f"  MAC Address: {address.address}")
-            print(f"  Netmask: {address.netmask}")
-            print(f"  Broadcast MAC: {address.broadcast}")
+            if DISPLAY == 1:
+                print(f"  MAC Address: {address.address}")
+                print(f"  Netmask: {address.netmask}")
+                print(f"  Broadcast MAC: {address.broadcast}")
             mydata = { 'IP': address.address, 'netmask': address.netmask, 'broadcast': address.broadcast}
     networking.append(mydata)
+
 network1 = json.dumps(networking)
 # get IO statistics since boot
 net_io = psutil.net_io_counters()
-print(f"Total Bytes Sent: {get_size(net_io.bytes_sent)}")
-print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
+if DISPLAY == 1:
+    print(f"Total Bytes Sent: {get_size(net_io.bytes_sent)}")
+    print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
 
 # get windows installed software
 # windata = wmi.WMI()
@@ -189,8 +205,8 @@ print(f"Total Bytes Received: {get_size(net_io.bytes_recv)}")
 # print(f'BIOS :{sysbios.Manufacturer}, {sysbios.Version}, - {sysbios.Serialnumber}')
 # for product in software:
 #     print(f"Software: {product.Name} {product.ProcessId}")
-
-print("Win ", getMachine_addr())
+if DISPLAY == 1:
+    print("Win ", getMachine_addr())
 # for product in systemwin:
 #     print(f"Computer: {product.version}")
 

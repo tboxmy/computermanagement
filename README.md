@@ -19,7 +19,7 @@ Rename config.py-example to config.py and update the variable values.
 ## Generate installer
 
 pip install -U pyinstaller
-pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py
+pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py source/config.py
 
 ## Execute
 

@@ -130,11 +130,17 @@ if DISPLAY == 1:
     print(f"Percentage: {svmem.percent}%")
     print("="*20, "SWAP", "="*20)
     # get the swap memory details (if exists)
-    swap = psutil.swap_memory()
-    print(f"Total: {get_size(swap.total)}")
-    print(f"Free: {get_size(swap.free)}")
-    print(f"Used: {get_size(swap.used)}")
-    print(f"Percentage: {swap.percent}%")
+    try:
+        swap = psutil.swap_memory()
+        print(f"Total: {get_size(swap.total)}")
+        print(f"Free: {get_size(swap.free)}")
+        print(f"Used: {get_size(swap.used)}")
+        print(f"Percentage: {swap.percent}%")
+    except (PdhAddEnglishCounterw):
+        print('PdhAddEnglishCounterw Runtime error')
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
+    
 
 # Disk Information
 if DISPLAY == 1:
@@ -248,6 +254,7 @@ PARAMS = {'resource_id': RESOURCEID,
 try:
     response = requests.post(url = get_url(), headers=HEADERS, data=PARAMS)
     # extracting data in json format
+    print('Server connection URL=', get_url());
     data = response.json()
     print(data)
 except:

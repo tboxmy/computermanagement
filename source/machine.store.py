@@ -135,13 +135,10 @@ if DISPLAY == 1:
         print(f"Total: {get_size(swap.total)}")
         print(f"Free: {get_size(swap.free)}")
         print(f"Used: {get_size(swap.used)}")
-        print(f"Percentage: {swap.percent}%")
-    except (PdhAddEnglishCounterw):
-        print('PdhAddEnglishCounterw Runtime error')
+        print(f"Percentage: {swap.percent}%")        
     except Exception as err:
+        # print('PdhAddEnglishCounterw Runtime error')
         print(f"Unexpected {err=}, {type(err)=}")
-    
-
 # Disk Information
 if DISPLAY == 1:
     print("="*40, "Disk Information", "="*40)

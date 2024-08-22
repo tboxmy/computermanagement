@@ -26,7 +26,7 @@ pyinstaller --onefile --name "MISAgent-windows11" source/machine.store.py source
 Collect and submit data to server
 
 ```
-MISAgent-windows11.exe &lt;asset tag>
+MISAgent-windows11.exe <asset tag>
 ```
 
 How to run the command
